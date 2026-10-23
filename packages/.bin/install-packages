@@ -17,9 +17,9 @@ queue() { # <name> <install|upgrade> <command>
   cmds+=($3)
 }
 
-# Prints "<manager> <package>" for a resolved binary path, nothing when unknown.
-manager_of() {
-  local p=$1 out
+# Prints "<manager> <package>" for a binary on PATH, nothing when unknown.
+manager_of() { # <bin> <path from command -v>
+  local bin=$1 loc=$2 p=${2:A} out
   if [[ $p =~ '/Cellar/([^/]+)/' ]]; then
     echo brew $match[1]
   elif [[ $p =~ '/Caskroom/([^/]+)/' ]]; then
@@ -28,9 +28,8 @@ manager_of() {
     echo bun $match[1]
   elif [[ $p =~ '/lib/node_modules/((@[^/]+/)?[^/]+)/' ]]; then
     echo npm $match[1]
-  elif [[ $p =~ '/mise/installs/([^/]+)/' ]]; then
-    # ponytail: core mise tools only; backend tools (aqua:, npm:) have mangled dir names.
-    echo mise $match[1]
+  elif (( $+commands[mise] )) && [[ $(mise which $bin 2>/dev/null) == $loc ]]; then
+    echo mise $(mise which --plugin $bin) # e.g. rustc -> rust, npm -> node
   elif (( $+commands[pacman] )) && out=$(pacman -Qoq $p 2>/dev/null); then
     if pacman -Qmq $out >/dev/null 2>&1; then echo aur $out; else echo pacman $out; fi
   elif (( $+commands[dpkg] )) && out=$(dpkg -S $p 2>/dev/null || dpkg -S ${p#/usr} 2>/dev/null); then
@@ -91,14 +90,17 @@ load_outdated() {
 # so list them in order of preference. Runs via `zsh -c`, so pipes work.
 # Present: upgrades through the manager that actually installed it, if outdated.
 need() {
-  local bin=$1 loc manager pkg alt
+  local bin=$1 loc=$(command -v $1) manager pkg alt
   local -a words
   shift
-  if ! loc=$(command -v $bin); then
+  # A mise shim can outlive its tool, e.g. an npm global left in the previous node version.
+  [[ $loc == */mise/shims/* ]] && loc=$(mise which $bin 2>/dev/null)
+  if [[ -z $loc ]]; then
     for alt in "$@"; do
       words=(${(z)alt})
       while [[ $words[1] == (sudo|*=*) ]]; do shift words; done
-      if (( $+commands[$words[1]] )); then
+      # Usable now, or provided by an install queued earlier in this run (e.g. mise, go).
+      if (( $+commands[$words[1]] || ${names[(Ie)$words[1]]} )); then
         queue $bin install $alt
         (( installs++ ))
         return
@@ -107,8 +109,7 @@ need() {
     row missing $bin "(no usable installer among: ${(j:, :)@})"
     return
   fi
-  [[ $loc == */mise/shims/* ]] && loc=$(mise which $bin)
-  read -r manager pkg <<<"$(manager_of ${loc:A})"
+  read -r manager pkg <<<"$(manager_of $bin $loc)"
   if [[ -z $manager ]]; then
     row ok $bin "(unmanaged: $loc)"
     return
@@ -153,6 +154,16 @@ need mise \
   'brew install mise' \
   'sudo pacman -S --needed --noconfirm mise' \
   'curl -fsSL https://mise.run | sh'
+
+# Versions come from mise/.config/mise/config.toml (stowed to ~/.config/mise), so run
+# `make stow` first; edit that file to pin a version.
+need bun    'mise install bun'
+need node   'mise install node'
+need go     'mise install go'
+need python 'mise install python'
+need dotnet 'mise install dotnet'
+need rustc  'mise install rust'
+
 need gh \
   'brew install gh' \
   'sudo pacman -S --needed --noconfirm github-cli' \
@@ -173,7 +184,9 @@ need omp \
   'bun install -g @oh-my-pi/pi-coding-agent' \
   'brew install can1357/tap/omp' \
   'curl -fsSL https://omp.sh/install | sh'
-need codex 'npm install -g @openai/codex'
+need codex \
+  'npm install -g @openai/codex' \
+  'mise exec node -- npm install -g @openai/codex'
 need claude 'curl -fsSL https://claude.ai/install.sh | bash'
 
 if (( ! $#cmds )); then
@@ -187,12 +200,15 @@ answer=
 read -r answer
 [[ $answer == [yY]* ]] || { echo "Aborted."; exit 1 }
 
+export HOMEBREW_NO_ASK=1 # Homebrew 7 asks per command by default; we already confirmed
 for i in {1..$#cmds}; do
   c=$cmds[i]
   if (( ! $+ran[$c] )); then # one command (e.g. `pacman -Syu`) may cover several tools
     echo "==> $names[i]: $c"
     zsh -c $c
     ran[$c]=$?
+    rehash # pick up binaries from earlier installs, mise ones via `mise env`
+    (( $+commands[mise] )) && eval "$(mise env -s zsh 2>/dev/null)"
   fi
   [[ $ran[$c] == 0 ]] || failed+=($names[i])
 done
