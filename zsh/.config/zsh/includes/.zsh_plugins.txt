@@ -1,0 +1,6 @@
+mattmc3/zfunctions
+zsh-users/zsh-autosuggestions
+zdharma-continuum/fast-syntax-highlighting kind:defer
+zsh-users/zsh-history-substring-search
+akash329d/zsh-alias-finder
+wintermi/zsh-mise

@@ -1,0 +1,35 @@
+#!/bin/bash
+
+path=$(pwd)
+
+# Start a new session
+tmux new-session -d
+
+# Split window in two first
+tmux split-window -h -p 75
+
+# Select first pane (left)
+tmux select-pane -t 0
+
+# Split in two vertically
+tmux split-window -v -p 50
+
+# go to path
+tmux select-pane -t 0
+tmux send-keys "cd $path"
+tmux send-keys KPEnter
+
+tmux select-pane -t 1
+tmux send-keys "cd $path"
+tmux send-keys KPEnter
+
+tmux select-pane -t 2
+tmux send-keys "cd $path"
+tmux send-keys KPEnter
+
+tmux select-pane -t 2
+tmux send-keys "nvim"
+tmux send-keys KPEnter
+
+# attach to session
+tmux attach-session
