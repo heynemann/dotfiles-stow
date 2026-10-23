@@ -3,11 +3,19 @@ zsh/.config/zsh/includes/.zsh_plugins.zsh
 
 # OMP MAIN
 omp/.omp/cache
+omp/.omp/*.db
+omp/.omp/*.db.*
+omp/.omp/*.db-shm
+omp/.omp/*.db-wal
+omp/.omp/agent/last-changelog-version
 omp/.omp/agent/*.db
+omp/.omp/agent/*.db.*
 omp/.omp/agent/*.db-shm
 omp/.omp/agent/*.db-wal
 omp/.omp/agent/blobs
+omp/.omp/agent/cache
 omp/.omp/agent/custom-session-files
+omp/.omp/agent/hypa-pi.json
 omp/.omp/agent/predict
 omp/.omp/agent/sessions
 omp/.omp/agent/terminal-sessions
@@ -22,12 +30,21 @@ omp/.omp/puppeteer
 omp/.omp/run
 
 # OMP PROFILES
+omp/.omp/profiles/*/browser-profiles
 omp/.omp/profiles/*/cache
+omp/.omp/profiles/*/*.db
+omp/.omp/profiles/*/*.db.*
+omp/.omp/profiles/*/*.db-shm
+omp/.omp/profiles/*/*.db-wal
 omp/.omp/profiles/*/agent/*.db
+omp/.omp/profiles/*/agent/*.db.*
 omp/.omp/profiles/*/agent/*.db-shm
 omp/.omp/profiles/*/agent/*.db-wal
 omp/.omp/profiles/*/agent/blobs
+omp/.omp/profiles/*/agent/cache
 omp/.omp/profiles/*/agent/custom-session-files
+omp/.omp/profiles/*/agent/hypa-pi.json
+omp/.omp/profiles/*/agent/last-changelog-version
 omp/.omp/profiles/*/agent/predict
 omp/.omp/profiles/*/agent/sessions
 omp/.omp/profiles/*/agent/terminal-sessions

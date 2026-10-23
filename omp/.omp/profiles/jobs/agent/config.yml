@@ -1,0 +1,27 @@
+symbolPreset: unicode
+composer:
+  shape: box
+theme:
+  dark: titanium
+setupVersion: 2
+modelRoles:
+  default: anthropic/claude-opus-5-5
+skills:
+  enablePiUser: false
+  enableClaudeUser: false
+  enableClaudeProject: false
+  enableCodexUser: false
+  enableAgentsUser: false
+  enableAgentsProject: false
+  customDirectories:
+    - /home/heynemann/.omp/profiles/jobs/skills-sh/.agents/skills
+    - /home/heynemann/.omp/profiles/jobs/agent/skills
+disabledProviders:
+  - opencode
+  - claude
+  - codex
+  - cursor
+  - gemini
+  - vscode
+  - windsurf
+  - cline

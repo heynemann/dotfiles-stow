@@ -1,0 +1,28 @@
+modelRoles:
+  default: anthropic/claude-opus-5-5
+symbolPreset: nerd
+composer:
+  shape: box
+theme:
+  dark: doordash
+  light: doordash
+setupVersion: 2
+skills:
+  enablePiUser: false
+  enableClaudeUser: false
+  enableClaudeProject: false
+  enableCodexUser: false
+  enableAgentsUser: false
+  enableAgentsProject: false
+  customDirectories:
+    - /home/heynemann/.omp/profiles/doordash/skills-sh/.agents/skills
+    - /home/heynemann/.omp/profiles/doordash/agent/skills
+disabledProviders:
+  - opencode
+  - claude
+  - codex
+  - cursor
+  - gemini
+  - vscode
+  - windsurf
+  - cline

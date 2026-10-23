@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "marketplaces": [
+    {
+      "name": "unity-agent-plugin",
+      "sourceType": "github",
+      "sourceUri": "Unity-Technologies/unity-agent-plugin",
+      "catalogPath": "/home/heynemann/.omp/profiles/unity/plugins/cache/marketplaces/unity-agent-plugin/marketplace.json",
+      "addedAt": "2026-10-15T16:26:20.274Z",
+      "updatedAt": "2026-10-15T16:26:20.274Z"
+    }
+  ]
+}

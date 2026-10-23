@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "apify-jobs-data": {
+      "source": "apify/awesome-skills",
+      "sourceType": "github",
+      "skillPath": "skills/apify-jobs-data/SKILL.md",
+      "computedHash": "f747653595f060afb9184dea2e56de33660337afb4dff97deb2f5c8cf61f2cd8"
+    }
+  }
+}

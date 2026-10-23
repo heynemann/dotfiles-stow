@@ -1,0 +1,30 @@
+modelRoles:
+  default: openai-codex/gpt-6.1-sol
+symbolPreset: unicode
+composer:
+  shape: box
+theme:
+  dark: titanium
+setupVersion: 2
+dev:
+  autoqaConsent: granted
+skills:
+  enablePiUser: false
+  enableClaudeUser: false
+  enableClaudeProject: false
+  enableCodexUser: false
+  enableAgentsUser: false
+  enableAgentsProject: false
+  customDirectories:
+    - /home/heynemann/.omp/profiles/unity/skills-sh/.agents/skills
+    - /home/heynemann/.omp/profiles/unity/agent/skills
+disabledProviders:
+  - opencode
+  - claude
+  - codex
+  - cursor
+  - gemini
+  - vscode
+  - windsurf
+  - cline
+hideThinkingBlock: true

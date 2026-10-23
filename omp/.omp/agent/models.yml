@@ -1,0 +1,14 @@
+providers:
+  hep:
+    baseUrl: http://127.0.0.1:8080/v1
+    api: openai-completions
+    apiKey: HEP_API_KEY
+    discovery:
+      type: openai-models-list
+  hepqa:
+    baseUrl: https://gw.qa.hep.dev/v1
+    api: openai-completions
+    apiKey: HEP_API_KEY
+    discovery:
+      type: openai-models-list
+

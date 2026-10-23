@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "marketplaces": [
+    {
+      "name": "heynemann",
+      "sourceType": "github",
+      "sourceUri": "heynemann/omp-marketplace",
+      "catalogPath": "/home/heynemann/.omp/plugins/cache/marketplaces/heynemann/marketplace.json",
+      "addedAt": "2026-09-28T03:52:12.001Z",
+      "updatedAt": "2026-10-22T17:03:46.873Z"
+    }
+  ]
+}
