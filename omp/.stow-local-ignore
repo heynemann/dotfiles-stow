@@ -1,0 +1,13 @@
+# Runtime state that only lives in ~/.omp; mirrors the OMP entries in ../.gitignore.
+# Perl regexes. With a "/": matched against the path from the package root.
+# Without: matched against any file or directory name.
+
+.*\.db
+.*\.db\..*
+.*\.db-(shm|wal)
+
+\.omp/(profiles/[^/]+/)?(browser-profiles|cache|chrome-libs|gpu_cache\.json|install-id|logs|natives|paperclip|plugins|puppeteer|run)
+\.omp/(profiles/[^/]+/)?agent/(blobs|cache|custom-session-files|hypa-pi\.json|last-changelog-version|predict|sessions|terminal-sessions)
+
+# Absolute symlinks into ~/.paperclip (stow refuses absolute links).
+\.omp/agent/skills/(paperclip[^/]*|para-memory-files)

@@ -1,0 +1,204 @@
+#!/usr/bin/env zsh
+# Checks every declared command: queues an install when missing, or an upgrade through
+# whichever manager installed it when outdated. Shows the plan, then asks once.
+setopt nounset pipefail
+
+typeset -a names cmds failed
+typeset -A outdated ran # outdated: manager -> newline-separated packages, loaded once
+integer installs=0 upgrades=0
+aur=
+if (( $+commands[paru] )); then aur=paru; elif (( $+commands[yay] )); then aur=yay; fi
+
+row() { printf '  %-8s %-11s %s\n' "$@" }
+
+queue() { # <name> <install|upgrade> <command>
+  row $2 $1 $3
+  names+=($1)
+  cmds+=($3)
+}
+
+# Prints "<manager> <package>" for a resolved binary path, nothing when unknown.
+manager_of() {
+  local p=$1 out
+  if [[ $p =~ '/Cellar/([^/]+)/' ]]; then
+    echo brew $match[1]
+  elif [[ $p =~ '/Caskroom/([^/]+)/' ]]; then
+    echo cask $match[1]
+  elif [[ $p == $HOME/.bun/install/global/* && $p =~ '/node_modules/((@[^/]+/)?[^/]+)/' ]]; then
+    echo bun $match[1]
+  elif [[ $p =~ '/lib/node_modules/((@[^/]+/)?[^/]+)/' ]]; then
+    echo npm $match[1]
+  elif [[ $p =~ '/mise/installs/([^/]+)/' ]]; then
+    # ponytail: core mise tools only; backend tools (aqua:, npm:) have mangled dir names.
+    echo mise $match[1]
+  elif (( $+commands[pacman] )) && out=$(pacman -Qoq $p 2>/dev/null); then
+    if pacman -Qmq $out >/dev/null 2>&1; then echo aur $out; else echo pacman $out; fi
+  elif (( $+commands[dpkg] )) && out=$(dpkg -S $p 2>/dev/null || dpkg -S ${p#/usr} 2>/dev/null); then
+    out=${out%%$'\n'*} # first line: "pkg[:arch]: /path"
+    echo apt ${${out%%: *}%%:*}
+  fi
+}
+
+load_outdated() {
+  (( $+outdated[$1] )) && return
+  local list= line
+  case $1 in
+  brew|cask)
+    brew update --quiet >/dev/null 2>&1
+    for line in ${(f)"$(brew outdated --quiet 2>/dev/null)"}; do list+=${line:t}$'\n'; done
+    outdated[brew]=$list
+    outdated[cask]=$list
+    return
+    ;;
+  bun)
+    for line in ${(f)"$(cd $HOME/.bun/install/global 2>/dev/null && bun outdated 2>/dev/null)"}; do
+      [[ $line == '| '* ]] || continue # table row: | Package | Current | Update | Latest |
+      line=${${line#\| }%% *}
+      [[ $line == (Package|-*) ]] || list+=$line$'\n'
+    done
+    ;;
+  npm)
+    for line in ${(f)"$(npm outdated -g --parseable 2>/dev/null)"}; do
+      list+=${${line%%:*}##*/node_modules/}$'\n'
+    done
+    ;;
+  mise)
+    for line in ${(f)"$(mise outdated --no-header 2>/dev/null)"}; do list+=${line%% *}$'\n'; done
+    ;;
+  pacman)
+    # checkupdates (pacman-contrib) refreshes a temp db without sudo; exits 2 when
+    # nothing is outdated, 1 on error (e.g. no fakeroot). Else fall back to the local db.
+    line=$(checkupdates 2>/dev/null)
+    (( $? == 1 || ! $+commands[checkupdates] )) && line=$(pacman -Qu 2>/dev/null)
+    for line in ${(f)line}; do list+=${line%% *}$'\n'; done
+    ;;
+  aur)
+    [[ -n $aur ]] && for line in ${(f)"$($aur -Qua 2>/dev/null)"}; do list+=${line%% *}$'\n'; done
+    ;;
+  apt)
+    echo "  (refreshing apt index, sudo may ask for your password)"
+    sudo apt-get update -qq >/dev/null 2>&1
+    for line in ${(f)"$(apt list --upgradable 2>/dev/null)"}; do
+      [[ $line == */* ]] && list+=${line%%/*}$'\n'
+    done
+    ;;
+  esac
+  outdated[$1]=$list
+}
+
+# need <command> <install command>...
+# Missing: queues the first install command whose program exists (sudo/VAR= prefixes skipped),
+# so list them in order of preference. Runs via `zsh -c`, so pipes work.
+# Present: upgrades through the manager that actually installed it, if outdated.
+need() {
+  local bin=$1 loc manager pkg alt
+  local -a words
+  shift
+  if ! loc=$(command -v $bin); then
+    for alt in "$@"; do
+      words=(${(z)alt})
+      while [[ $words[1] == (sudo|*=*) ]]; do shift words; done
+      if (( $+commands[$words[1]] )); then
+        queue $bin install $alt
+        (( installs++ ))
+        return
+      fi
+    done
+    row missing $bin "(no usable installer among: ${(j:, :)@})"
+    return
+  fi
+  [[ $loc == */mise/shims/* ]] && loc=$(mise which $bin)
+  read -r manager pkg <<<"$(manager_of ${loc:A})"
+  if [[ -z $manager ]]; then
+    row ok $bin "(unmanaged: $loc)"
+    return
+  fi
+  load_outdated $manager
+  if (( ! ${${(f)outdated[$manager]}[(Ie)$pkg]} )); then
+    row ok $bin "($manager)"
+    return
+  fi
+  case $manager in
+  brew) queue $bin upgrade "brew upgrade $pkg" ;;
+  cask) queue $bin upgrade "brew upgrade --cask $pkg" ;;
+  bun) queue $bin upgrade "bun install -g $pkg@latest" ;;
+  npm) queue $bin upgrade "npm install -g $pkg@latest" ;;
+  mise) queue $bin upgrade "mise upgrade $pkg" ;;
+  pacman) queue $bin upgrade "sudo pacman -Syu" ;; # Arch does not support partial upgrades
+  aur) queue $bin upgrade "$aur -S --needed --noconfirm $pkg" ;;
+  apt) queue $bin upgrade "sudo apt-get install --only-upgrade -y $pkg" ;;
+  esac
+  (( upgrades++ ))
+}
+
+echo "Checking packages:"
+
+need stow \
+  'brew install stow' \
+  'sudo pacman -S --needed --noconfirm stow' \
+  'sudo apt-get install -y stow'
+need zsh \
+  'brew install zsh' \
+  'sudo pacman -S --needed --noconfirm zsh' \
+  'sudo apt-get install -y zsh'
+need tmux \
+  'brew install tmux' \
+  'sudo pacman -S --needed --noconfirm tmux' \
+  'sudo apt-get install -y tmux'
+need nvim \
+  'brew install neovim' \
+  'sudo pacman -S --needed --noconfirm neovim' \
+  'sudo apt-get install -y neovim'
+need mise \
+  'brew install mise' \
+  'sudo pacman -S --needed --noconfirm mise' \
+  'curl -fsSL https://mise.run | sh'
+need gh \
+  'brew install gh' \
+  'sudo pacman -S --needed --noconfirm github-cli' \
+  'sudo apt-get install -y gh'
+need railway \
+  'brew install railway' \
+  'curl -fsSL https://railway.com/install.sh | bash -s -- --bin-dir ~/.local/bin'
+need grafanactl \
+  'brew install grafanactl' \
+  'paru -S --needed --noconfirm grafanactl-bin' \
+  'yay -S --needed --noconfirm grafanactl-bin' \
+  'GOBIN=$HOME/.local/bin go install github.com/grafana/grafanactl/cmd/grafanactl@latest'
+need opencode \
+  'brew install opencode' \
+  'sudo pacman -S --needed --noconfirm opencode' \
+  'curl -fsSL https://opencode.ai/install | bash'
+need omp \
+  'bun install -g @oh-my-pi/pi-coding-agent' \
+  'brew install can1357/tap/omp' \
+  'curl -fsSL https://omp.sh/install | sh'
+need codex 'npm install -g @openai/codex'
+need claude 'curl -fsSL https://claude.ai/install.sh | bash'
+
+if (( ! $#cmds )); then
+  echo "Nothing to install or upgrade."
+  exit 0
+fi
+
+echo
+printf 'Install %d, upgrade %d (%s)? [y/N] ' $installs $upgrades "${(j: :)names}"
+answer=
+read -r answer
+[[ $answer == [yY]* ]] || { echo "Aborted."; exit 1 }
+
+for i in {1..$#cmds}; do
+  c=$cmds[i]
+  if (( ! $+ran[$c] )); then # one command (e.g. `pacman -Syu`) may cover several tools
+    echo "==> $names[i]: $c"
+    zsh -c $c
+    ran[$c]=$?
+  fi
+  [[ $ran[$c] == 0 ]] || failed+=($names[i])
+done
+
+if (( $#failed )); then
+  echo "Failed: ${(j: :)failed}" >&2
+  exit 1
+fi
+echo "Done."

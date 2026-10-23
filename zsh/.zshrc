@@ -30,4 +30,6 @@ source "$ZSH_CFG/includes/mise.zsh"
 source "$ZSH_CFG/includes/plugins.zsh"
 source "$ZSH_CFG/includes/starship.zsh"
 
-
+# >>> railway initialize >>>
+source "$HOME/.railway/env"
+# <<< railway initialize <<<

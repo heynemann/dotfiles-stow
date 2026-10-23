@@ -5,40 +5,48 @@
       "type": "http",
       "url": "https://mcp.tavily.com/mcp"
     },
-    "railway": {
-      "type": "http",
-      "url": "https://mcp.railway.com"
-    },
     "workos": {
       "type": "http",
       "url": "https://mcp.workos.com/mcp"
-    }, 
+    },
     "lightpanda": {
       "command": "/home/linuxbrew/.linuxbrew/bin/lightpanda",
-      "args": ["mcp"]
+      "args": [
+        "mcp"
+      ]
     },
     "gopls": {
       "command": "/home/heynemann/.local/share/mise/shims/gopls",
-      "args": ["mcp"],
+      "args": [
+        "mcp"
+      ],
       "timeout": 120000
     },
     "typegraph": {
       "command": "typegraph-mcp",
-      "env": { "TYPEGRAPH_PROJECT_ROOT": "${PWD}" },
+      "env": {
+        "TYPEGRAPH_PROJECT_ROOT": "${PWD}"
+      },
       "timeout": 120000
     },
     "language-server-python": {
       "command": "mcp-language-server",
       "args": [
-        "--workspace", "${PWD}",
-        "--lsp", "pyright-langserver",
-        "--", "--stdio"
+        "--workspace",
+        "${PWD}",
+        "--lsp",
+        "pyright-langserver",
+        "--",
+        "--stdio"
       ],
       "timeout": 120000
     },
     "chrome-devtools": {
       "command": "npx",
-      "args": ["-y", "chrome-devtools-mcp@latest"]
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest"
+      ]
     }
   }
 }
