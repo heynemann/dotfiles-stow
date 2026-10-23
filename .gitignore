@@ -1,2 +1,11 @@
 nvim/.config/nvim/lazy-lock.json
 zsh/.config/zsh/includes/.zsh_plugins.zsh
+omp/.omp/cache
+omp/.omp/agent/*.db
+omp/.omp/agent/*.db-shm
+omp/.omp/agent/*.db-wal
+omp/.omp/agent/blobs
+omp/.omp/agent/custom-session-files
+omp/.omp/agent/predict
+omp/.omp/agent/sessions
+omp/.omp/agent/terminal-sessions
