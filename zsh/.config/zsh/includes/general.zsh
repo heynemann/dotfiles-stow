@@ -46,7 +46,7 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 # History configurations
-HISTFILE=~/.zsh/.zsh_history
+HISTFILE="$ZSH_CFG/.zsh_history"
 HISTSIZE=5000
 SAVEHIST=5000
 setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE

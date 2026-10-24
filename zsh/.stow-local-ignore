@@ -1,0 +1,5 @@
+# Runtime state that only lives in ~/.config/zsh; mirrors the zsh entries in ../.gitignore.
+# Perl regexes. With a "/": matched against the path from the package root.
+# Without: matched against any file or directory name.
+
+\.zsh_history

@@ -1,12 +1,21 @@
-alias wslview='/mnt/c/Windows/explorer.exe'
-export BROWSER='/mnt/c/Windows/explorer.exe'
-alias open='wslview'
-alias st="~/.zsh/bin/st"
+# Platform-specific: WSL2 opens things through Windows, native Linux via xdg-open
+if [[ -n $WSL_DISTRO_NAME || -e /proc/sys/fs/binfmt_misc/WSLInterop ]]; then
+  export BROWSER='/mnt/c/Windows/explorer.exe'
+  alias wslview='/mnt/c/Windows/explorer.exe'
+  alias open='wslview'
+else
+  alias open='xdg-open'
+fi
 alias ls="ls --color"
 
-# Copy/paste
-alias pbcopy='xclip -selection clipboard'
-alias pbpaste='xclip -selection clipboard -o'
+# Copy/paste: Wayland (Omarchy, WSLg with wl-clipboard) or X11
+if [[ -n $WAYLAND_DISPLAY ]] && (( $+commands[wl-copy] )); then
+  alias pbcopy='wl-copy'
+  alias pbpaste='wl-paste'
+else
+  alias pbcopy='xclip -selection clipboard'
+  alias pbpaste='xclip -selection clipboard -o'
+fi
 
 # Git
 gmc() {
