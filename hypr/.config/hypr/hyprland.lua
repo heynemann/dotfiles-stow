@@ -27,3 +27,11 @@ require("default.hypr.toggles")
 
 -- Add any other personal Hyprland configuration below.
 -- o.window("qemu", { workspace = "5" })
+
+-- Open new browser windows on the right monitor (DP-1, positioned at 2560x0 in monitors.lua).
+-- Tags come from Omarchy's default/hypr/apps/browser.lua; web apps (chrome-*) are not tagged.
+o.window({ tag = "chromium-based-browser" }, { monitor = "DP-1" })
+o.window({ tag = "firefox-based-browser" }, { monitor = "DP-1" })
+
+-- Open Spotify on the left monitor (HDMI-A-1, positioned at -2560x0 in monitors.lua).
+o.window("Spotify", { monitor = "HDMI-A-1" })
