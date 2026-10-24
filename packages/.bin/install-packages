@@ -142,6 +142,10 @@ need zsh \
   'brew install zsh' \
   'sudo pacman -S --needed --noconfirm zsh' \
   'sudo apt-get install -y zsh'
+need starship \
+  'brew install starship' \
+  'sudo pacman -S --needed --noconfirm starship' \
+  'curl -fsSL https://starship.rs/install.sh | sh -s -- -y -b ~/.local/bin'
 need tmux \
   'brew install tmux' \
   'sudo pacman -S --needed --noconfirm tmux' \

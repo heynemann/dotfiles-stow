@@ -13,10 +13,6 @@ bindkey -v
 # If not running interactively, don't do anything else (leave this above the rc source)
 [[ $- != *i* ]] && return
 
-# All the default Omarchy aliases and functions
-# (don't mess with these directly, just overwrite them here!)
-# source "$OMARCHY_PATH/default/bash/rc"
-
 export ZSH_CFG="$HOME/.config/zsh"
 
 zstyle :compinstall filename '/home/heynemann/.zshrc'
@@ -35,6 +31,14 @@ if [ -f "$HOME/.local.zsh" ]; then
   source "$HOME/.local.zsh"
 fi
 
+# Plugins, then the completion system: compinit only sees fpath as it is when it runs
+source "$ZSH_CFG/includes/mise.zsh"
+source "$ZSH_CFG/includes/plugins.zsh"
+source "$ZSH_CFG/includes/completion.zsh"
+
+# Omarchy's default aliases, functions and tool init (no-op elsewhere); everything below overrides them
+source "$ZSH_CFG/includes/omarchy.zsh"
+
 if [ -f "$HOME/.alias.zsh" ]; then
   source "$HOME/.alias.zsh"
 fi
@@ -42,9 +46,6 @@ fi
 # General configs
 source "$ZSH_CFG/includes/general.zsh"
 
-# Plugins
-source "$ZSH_CFG/includes/mise.zsh"
-source "$ZSH_CFG/includes/plugins.zsh"
 source "$ZSH_CFG/includes/starship.zsh"
 
 # >>> railway initialize >>>

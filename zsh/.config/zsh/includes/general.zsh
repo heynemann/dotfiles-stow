@@ -28,9 +28,7 @@ bindkey '^[[H' beginning-of-line                  # home
 bindkey '^[[F' end-of-line                        # end
 bindkey '^[[Z' undo                               # shift + tab undo last action
 
-# enable completion features
-autoload -Uz compinit
-compinit -d ~/.cache/zcompdump
+# completion styles (compinit itself runs in completion.zsh, after plugins extend fpath)
 zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete
