@@ -2,6 +2,11 @@ nvim/.config/nvim/lazy-lock.json
 zsh/.config/zsh/includes/.zsh_plugins.zsh
 zsh/.config/zsh/.zsh_history
 
+# HYPR: displays are per machine; Omarchy tools drop *.bak.* next to the configs.
+# Only lands here if stow folds ~/.config/hypr (it didn't exist before stowing).
+hypr/.config/hypr/monitors.lua
+hypr/.config/hypr/*.bak.*
+
 # OMP MAIN
 omp/.omp/cache
 omp/.omp/*.db

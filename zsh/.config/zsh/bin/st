@@ -1,35 +1,14 @@
 #!/bin/bash
 
+# New tmux session in the current directory: two stacked shells on the left,
+# nvim on the right (75%). Targets pane ids, so it works with any base-index.
 path=$(pwd)
 
-# Start a new session
-tmux new-session -d
+left=$(tmux new-session -d -c "$path" -P -F '#{pane_id}')
+editor=$(tmux split-window -h -p 75 -t "$left" -c "$path" -P -F '#{pane_id}')
+tmux split-window -v -p 50 -t "$left" -c "$path"
 
-# Split window in two first
-tmux split-window -h -p 75
+tmux send-keys -t "$editor" nvim Enter
+tmux select-pane -t "$editor"
 
-# Select first pane (left)
-tmux select-pane -t 0
-
-# Split in two vertically
-tmux split-window -v -p 50
-
-# go to path
-tmux select-pane -t 0
-tmux send-keys "cd $path"
-tmux send-keys KPEnter
-
-tmux select-pane -t 1
-tmux send-keys "cd $path"
-tmux send-keys KPEnter
-
-tmux select-pane -t 2
-tmux send-keys "cd $path"
-tmux send-keys KPEnter
-
-tmux select-pane -t 2
-tmux send-keys "nvim"
-tmux send-keys KPEnter
-
-# attach to session
-tmux attach-session
+tmux attach-session -t "$editor"

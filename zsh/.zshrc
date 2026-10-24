@@ -47,7 +47,3 @@ fi
 source "$ZSH_CFG/includes/general.zsh"
 
 source "$ZSH_CFG/includes/starship.zsh"
-
-# >>> railway initialize >>>
-[[ -f "$HOME/.railway/env" ]] && source "$HOME/.railway/env"
-# <<< railway initialize <<<
