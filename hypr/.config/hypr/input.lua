@@ -3,10 +3,17 @@
 
 -- US International: dead keys for accents (' + a = á, ~ + a = ã, " + u = ü).
 -- Keep fcitx5's input method (~/.config/fcitx5/profile) on keyboard-us-intl
--- too, or it types with plain US.
+-- too, or it types with plain US. ' + c = ç and Windows-style quotes (Let's)
+-- come from the overrides in ~/.XCompose (xcompose stow package).
+--
+-- Corsair K100: ckb-next (Program/GlobalRemap in ~/.config/ckb-next/ckb-next.conf)
+-- turns the physical Caps key into Escape and G1 into Caps Lock, so Compose
+-- moves off Caps (Omarchy's default) to the Menu key, keeping Right Ctrl and
+-- Right Alt (AltGr) intact.
 hl.config({
   input = {
     kb_variant = "intl",
+    kb_options = "compose:menu,shift:both_capslock_cancel",
   },
 })
 

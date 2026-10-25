@@ -1,0 +1,34 @@
+#!/bin/bash
+# Toggle gaming mode: disables Omarchy's idle screensaver and auto-lock
+# (gamepad input doesn't count as user activity), and restores them when off.
+
+set -euo pipefail
+
+CONFIG="$HOME/.config/omarchy/shell.json"
+STATE="${XDG_STATE_HOME:-$HOME/.local/state}/gaming-mode/idle.json"
+DEFAULT_IDLE='{"screensaver":150,"lock":300}'
+
+set_idle() {
+  local tmp
+  tmp=$(mktemp)
+  jq --argjson idle "$1" '.idle = (.idle // {}) + $idle' "$CONFIG" >"$tmp"
+  # Write in place so a symlinked shell.json stays a symlink.
+  cat "$tmp" >"$CONFIG"
+  rm -f "$tmp"
+}
+
+screensaver=$(jq '.idle.screensaver // 150' "$CONFIG")
+lock=$(jq '.idle.lock // 300' "$CONFIG")
+
+if [[ $screensaver == 0 && $lock == 0 ]]; then
+  restore=$DEFAULT_IDLE
+  [[ -f $STATE ]] && restore=$(<"$STATE")
+  set_idle "$restore"
+  rm -f "$STATE"
+  echo "Gaming Mode: OFF"
+else
+  mkdir -p "$(dirname "$STATE")"
+  jq -n --argjson s "$screensaver" --argjson l "$lock" '{screensaver: $s, lock: $l}' >"$STATE"
+  set_idle '{"screensaver":0,"lock":0}'
+  echo "Gaming Mode: ON"
+fi

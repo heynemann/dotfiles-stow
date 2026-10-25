@@ -193,6 +193,13 @@ need codex \
   'mise exec node -- npm install -g @openai/codex'
 need claude 'curl -fsSL https://claude.ai/install.sh | bash'
 
+# Corsair K100: ckb-next remaps Caps -> Escape and G1 -> Caps Lock (see hypr/input.lua).
+if [[ $OSTYPE == linux* ]]; then
+  need ckb-next \
+    'sudo pacman -S --needed --noconfirm ckb-next && sudo systemctl enable --now ckb-next-daemon.service' \
+    'sudo apt-get install -y ckb-next && sudo systemctl enable --now ckb-next-daemon.service'
+fi
+
 if (( ! $#cmds )); then
   echo "Nothing to install or upgrade."
   exit 0
