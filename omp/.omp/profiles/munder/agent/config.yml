@@ -1,0 +1,14 @@
+modelRoles:
+  default: anthropic/claude-opus-5-5
+symbolPreset: unicode
+composer:
+  shape: box
+theme:
+  dark: titanium
+setupVersion: 2
+plan:
+  defaultOnStartup: false
+skills:
+  customDirectories:
+    - /home/heynemann/.omp/profiles/munder/skills-sh/.agents/skills
+    - /home/heynemann/.omp/profiles/munder/agent/skills
