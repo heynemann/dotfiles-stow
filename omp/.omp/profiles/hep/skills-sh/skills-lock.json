@@ -49,6 +49,12 @@
       "skillPath": "skills/hallmark/SKILL.md",
       "computedHash": "579f86b27cdd7eb972107f7aecedd537f472891c5fd7c7c821bea15f64e0fe86"
     },
+    "information-architecture": {
+      "source": "julianoczkowski/designer-skills",
+      "sourceType": "github",
+      "skillPath": "information-architecture/SKILL.md",
+      "computedHash": "42b3b96103c0c910ff73841b9c843c8be8111c3d1fdc0746c07d911a23335191"
+    },
     "interface-design": {
       "source": "dammyjay93/interface-design",
       "sourceType": "github",
@@ -96,6 +102,12 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/to-tickets/SKILL.md",
       "computedHash": "5f871bdc46a9212222214ba399be4965374208af1bd7f48f1271bef72841dd31"
+    },
+    "ux-heuristics": {
+      "source": "wondelai/skills",
+      "sourceType": "github",
+      "skillPath": "ux-heuristics/SKILL.md",
+      "computedHash": "078959463a4d191d3ff17fd7a0b036697c79da3e86102251c98f76ffa9e66a28"
     },
     "vercel-composition-patterns": {
       "source": "vercel-labs/agent-skills",
