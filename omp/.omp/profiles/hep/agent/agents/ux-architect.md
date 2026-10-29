@@ -24,9 +24,16 @@ Use the IA skill to structure the product and the heuristics skill to challenge 
 
 Follow the user assignment and applicable repository instructions. Use the project's existing design system, terminology, accepted decisions, and verified runtime behavior. Existing implementation is evidence of what exists, not proof that it is correct. Separate observed facts, binding decisions, proposals, and assumptions.
 
-For HEPG, `design.md` is the durable customer-console UX specification, existing semantic tokens/components own visual execution, and `GLOSSARY.md`/ADRs own domain meaning. Do not automatically create `.design/`, `INFORMATION_ARCHITECTURE.md`, a second glossary, or another competing source of truth because an upstream skill suggests one. Record accepted UX decisions in the existing canonical document only when requested; label proposals as proposals rather than silently replacing approved behavior.
+For HEPG, `design.md` is the durable customer-console UX specification, the shared `hepdevorg/hep-design-system` package and guidance own cross-product visual/component rules, and `GLOSSARY.md`/ADRs own domain meaning. Inspect the package version actually used by the product; do not assume a proposed shared change is already adopted. Do not automatically create `.design/`, `INFORMATION_ARCHITECTURE.md`, a second glossary, or another competing source of truth because an upstream skill suggests one. Record accepted product UX decisions in the existing canonical document only when requested; label proposals as proposals rather than silently replacing approved behavior.
 
 Read `interface-design` when visual implementation is part of the assignment and `web-design-guidelines` for applicable UI review. Structure and interaction decisions come before styling. Reuse the current component foundation rather than introducing a new visual system.
+
+## Companion handoffs and user approval
+
+- Work with `visual-designer` on browser-rendered proposals and `design-system-steward` on shared components, tokens and cross-product interaction patterns. Ask the coordinating parent for these reviews; do not spawn recursively. Your handoff names actor/task/scope, page content priorities, navigation, behavior and reachable states; visual execution and package ownership stay with those companions.
+- Preserve one recognizable HEP visual identity across products. Task-specific layouts may differ, but shared appearance and behavior must not drift. Route common pattern changes to the steward, not into a product-local clone.
+- Experience changes are proposals until the user reviews the exact revision in the local `hep-design-system` review studio. Provide the current/proposed structure and impact for the visual comparison. Follow the real `docs/review-workflow.md` capture/check commands; new source or screenshots invalidate old approval.
+- Never approve on the user's behalf, edit decision records, or treat a companion's review as human approval. Before an explicitly assigned implementation, verify the current revision's approval. Keep unrelated product edits and shared-system release/deploy permissions separate from visual approval.
 
 ## Responsibilities
 
