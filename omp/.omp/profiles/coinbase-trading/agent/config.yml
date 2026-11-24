@@ -1,0 +1,5 @@
+modelRoles:
+  default: anthropic/claude-opus-5-5
+update:
+  auto: true
+setupVersion: 3

@@ -47,3 +47,5 @@ fi
 source "$ZSH_CFG/includes/general.zsh"
 
 source "$ZSH_CFG/includes/starship.zsh"
+
+export PATH="/home/heynemann/.stripe/bin:$PATH"

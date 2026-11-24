@@ -85,6 +85,20 @@
       "skillPath": "skills/engineering/setup-matt-pocock-skills/SKILL.md",
       "computedHash": "1d35d0afa3ded88c9324d38db08b2cff91cd03e0e11d64786bee41385cd7b9fb"
     },
+    "stripe-best-practices": {
+      "source": "docs.stripe.com",
+      "sourceUrl": "https://docs.stripe.com",
+      "sourceType": "well-known",
+      "computedHash": "0ff3b79104b0f080927b0cc5b4e84e1c41b7fd70658ee6af615315197b005acf",
+      "wellKnownDigest": "sha256:6568580a4e966ff446e2f4e4a4e7f8a3a2469294ef4d7cb9bc3e73517d357df7"
+    },
+    "stripe-docs": {
+      "source": "docs.stripe.com",
+      "sourceUrl": "https://docs.stripe.com",
+      "sourceType": "well-known",
+      "computedHash": "ee4a51d34f11386fe6c9f991d5b2d32da69c851124a78a01403412bcf87e73d7",
+      "wellKnownDigest": "sha256:354fb04e9c979223bfecabc994fff41c8da5b5ea155684f1b4ade3a6fed07bac"
+    },
     "test-roadmap": {
       "source": "Ovid/paad",
       "sourceType": "github",
@@ -102,6 +116,13 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/to-tickets/SKILL.md",
       "computedHash": "5f871bdc46a9212222214ba399be4965374208af1bd7f48f1271bef72841dd31"
+    },
+    "upgrade-stripe": {
+      "source": "docs.stripe.com",
+      "sourceUrl": "https://docs.stripe.com",
+      "sourceType": "well-known",
+      "computedHash": "dcf197441900b2801fc8407513147b0819fa3359b923d7209fbfc02b51af4866",
+      "wellKnownDigest": "sha256:e4ef04fd0920206e6410088a71f213418d981e90f1fba81c5b3e7e14dc7e6f8a"
     },
     "ux-heuristics": {
       "source": "wondelai/skills",

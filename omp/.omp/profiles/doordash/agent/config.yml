@@ -1,5 +1,5 @@
 modelRoles:
-  default: anthropic/claude-opus-5-5
+  default: openai-codex/gpt-6.1-sol:high
 symbolPreset: nerd
 composer:
   shape: box
@@ -26,3 +26,5 @@ disabledProviders:
   - vscode
   - windsurf
   - cline
+dev:
+  autoqaConsent: granted
