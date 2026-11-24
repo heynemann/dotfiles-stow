@@ -165,12 +165,9 @@ alias vim="nvim"
 export PATH="/home/heynemann/.bun/bin:$PATH"
 alias ompu="brew update && brew upgrade omp && omp plugin marketplace update heynemann && omp plugin upgrade base@heynemann"
 
-export OMP_PROFILES="doordash,unity,nubank,hep"
-
 ompp() {
   local -a profiles
-  profiles=(default ${(s:,:)OMP_PROFILES})          # split on commas, "default" first
-  profiles=(${(u)profiles//[[:space:]]/})            # trim spaces, drop empties and duplicates
+  profiles=(default $HOME/.omp/profiles/*(N/:t))    # every profile dir name, "default" first
 
   local selected
   selected=$(print -rl -- $profiles | fzf --prompt='omp profile> ' --height=40% --reverse) || return
